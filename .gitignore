@@ -1,0 +1,17 @@
+.Rproj.user
+.Rhistory
+.Renviron
+.RData
+.Ruserdata
+.DS_Store
+.jpeg
+.rda
+.html
+data/intermediate
+data/run
+data/output
+renv/
+workflows/
+# pixi environments
+.pixi/*
+!.pixi/config.toml
