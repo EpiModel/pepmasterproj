@@ -15,7 +15,7 @@ renv::init()
 source("R/shared_variables.R", local = TRUE)
 
 # Install the correct version of EpiModelHIV-p for your project
-renv::install(paste0("EpiModel/EpiModelHIV-p@", EMHIVp_branch))
+renv::install(paste0("babygal21/EpiModelHIV-p@", EMHIVp_branch))
 
 # Lock the installed package versions
 renv::snapshot()
@@ -33,9 +33,9 @@ fs::file_copy(
 library(ARTnetData)
 
 ## Manually install all dependencies
-# renv::install(
-#   paste0(
-#     "epimodel/", c("artnetdata", "epimodelhpc", "slurmworkflow", "swfcalib")
-#   )
-# )
-# renv::hydrate()
+ renv::install(
+   paste0(
+    "epimodel/", c("artnetdata", "epimodelhpc", "slurmworkflow", "swfcalib")
+   )
+ )
+ renv::hydrate()

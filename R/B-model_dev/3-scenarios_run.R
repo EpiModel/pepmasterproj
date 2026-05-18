@@ -39,11 +39,14 @@ print(control)
 # Valid parameter names are those in data/input/model_parameters.csv or any
 # argument accepted by param.net().
 scenarios_df <- tibble(
-  .scenario.id    = c("scenario_1", "scenario_2"),
-  .at             = 1,
-  gono.uret.prob  = c(0.25, 0.3),
-  chla.uret.prob  = c(0.25, 0.3),
-  syph.prob       = c(0.15, 0.2)
+  .scenario.id = c(
+    "baseline",
+    "pep_25",
+    "pep_50",
+    "pep_75"
+  ),
+  .at = 1,
+  pep.coverage = c(0, 0.25, 0.5, 0.75)
 )
 
 glimpse(scenarios_df)
@@ -57,8 +60,8 @@ scenarios_list <- EpiModel::create_scenario_list(scenarios_df)
 EpiModelHPC::netsim_scenarios(
   path_to_est, param, init, control,
   scenarios_list = scenarios_list, # set to NULL to run with default params
-  n_rep = 3,                       # number of replications per scenario
-  n_cores = 2,
+  n_rep = 100,                       # number of replications per scenario
+  n_cores = 8,
   output_dir = scenarios_dir
 )
 fs::dir_ls(scenarios_dir)

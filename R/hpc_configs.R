@@ -3,7 +3,7 @@
 ## This script should not be run directly. But `sourced` from the
 ## scripts that interact with the HPC (the `workflow-*.R` ones)
 
-current_git_branch <- "dev_v3.3"          # <- USER: your git branch
+current_git_branch <- "pepmasterproj"          # <- USER: your git branch
 
 hpc_node_setup <- c(
   ". /projects/epimodel/spack/share/spack/setup-env.sh",
@@ -19,7 +19,7 @@ hpc_node_setup <- c(
 make_em_workflow <- function(wf_name, override = FALSE, update_renv = TRUE) {
 
   # Check that `mail-user` is configured
-  hpc_mail_user <- Sys.getenv("HPC_MAIL_USER", unset = "")
+  hpc_mail_user <- Sys.getenv("HPC_MAIL_USER", unset = "daniellexrivas@gmail.com")
   if (!nzchar(hpc_mail_user)) {
     stop(
       "\n",
