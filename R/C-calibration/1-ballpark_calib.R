@@ -10,6 +10,19 @@
 library(EpiModelHIV)
 library(dplyr)
 
+# Load modified HIV transmission module
+source(
+  "C:/Users/danie/Documents/master's thesis/EpiModelHIV-p/R/mod.hivtrans.R",
+  local = TRUE
+)
+
+# Save modified function
+my_hivtrans <- hivtrans_msm
+
+# Give the function access to EpiModelHIV's internal
+# helper functions and objects
+environment(my_hivtrans) <- asNamespace("EpiModelHIV")
+
 source("R/shared_variables.R", local = TRUE)
 source("R/C-calibration/z-context.R", local = TRUE)
 
@@ -19,9 +32,12 @@ source("R/C-calibration/z-context.R", local = TRUE)
 source("R/netsim_settings.R", local = TRUE)
 
 # Control settings
+# Control settings
 control <- control_msm(
   nsteps = calibration_end
 )
+
+control$hivtrans.FUN <- my_hivtrans
 
 n_scenarios <- 3
 ors_calib <- seq(0.7, 1.3, length.out = n_scenarios)

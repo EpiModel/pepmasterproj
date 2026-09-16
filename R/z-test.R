@@ -25,3 +25,6 @@ source("R/B-model_dev/1-netsim_run.R")
 source("R/B-model_dev/2-debug_modules.R")
 source("R/B-model_dev/3-scenarios_run.R")
 source("R/B-model_dev/4-scenarios_assess.R")
+
+Notes
+- our script is now successfully working at 0 25 50 and 75 (:

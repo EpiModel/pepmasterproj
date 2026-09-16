@@ -23,7 +23,7 @@ scenarios_info <- EpiModelHPC::get_scenarios_tibble_infos(scenarios_tibble_dir)
 d_ref <- make_d_ref(
   fs::path(
     scenarios_tibble_dir,
-    "df__test_1_treat_1.rds"
+    "df__baseline.rds"
   )
 )
 

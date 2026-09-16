@@ -11,7 +11,7 @@ library(EpiModelHPC)
 library(EpiModelHIV)
 library(dplyr)
 
-hpc_context <- TRUE
+hpc_context <- FALSE
 source("R/shared_variables.R", local = TRUE)
 source("R/D-interventions/z-context.R", local = TRUE)
 source("R/hpc_configs.R", local = TRUE)
