@@ -107,6 +107,43 @@ the project evolves.
 script and is the single source of truth for paths, time steps, and milestones.
 Never redefine its variables in other scripts.
 
+## PEP Model Modification
+
+This project extends the EpiModelHIV framework to evaluate the potential
+population-level impact of post-exposure prophylaxis (PEP) on HIV incidence.
+
+The PEP intervention required a modification to the HIV transmission module
+(`mod.hivtrans.R`) so that HIV acquisition risk can respond to two additional
+model parameters:
+
+- `pep.coverage`: proportion of eligible exposures receiving PEP
+- `pep.efficacy`: reduction in HIV acquisition risk among individuals receiving PEP
+
+The modified EpiModelHIV-p source code used for this project is available in
+the `pepmasterproj` branch of the companion EpiModelHIV-p repository.
+
+The model version used to generate the thesis results corresponds to commit:
+
+`5f66db6a` — "added pep paramaters"
+
+### Intervention Scenarios
+
+The primary intervention analysis evaluated PEP coverage of:
+
+- 0% (baseline)
+- 25%
+- 50%
+- 75%
+
+with PEP efficacy fixed at 80%.
+
+A sensitivity analysis was subsequently conducted using PEP efficacy values
+of 60%, 80%, and 100% across PEP coverage levels of 25%, 50%, and 75%.
+
+Intervention and sensitivity-analysis scripts are located in:
+
+`R/D-interventions/`
+
 **Data directories:**
 
 - `data/input/` — parameters, scenario definitions (**git-tracked**)
