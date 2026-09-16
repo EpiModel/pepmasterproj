@@ -7,8 +7,8 @@
 ## workflow
 
 # Setup ------------------------------------------------------------------------
-scenario_name <- "empty_scenario"
-hpc_context <- TRUE
+scenario_name <- "scenario_2"
+hpc_context <- FALSE
 
 library(EpiModelHIV)
 library(dplyr)
@@ -78,7 +78,8 @@ if (!fs::file_exists(sim_path))
 
 restart_point <- make_restart_point_hiv(
   sim = readRDS(sim_path),
-  sim_num = best_sim$sim_number
+  sim_num = best_sim$sim_number,
+  sim_cost = best_sim$cost
 )
 
 saveRDS(restart_point, path_to_restart)

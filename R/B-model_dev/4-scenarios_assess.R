@@ -20,7 +20,7 @@ source("R/B-model_dev/z-context.R", local = TRUE)
 # Load the results of a single scenario
 d_sim <- readRDS(fs::path(
   scenarios_dir, "merged_tibbles",
-  "df__scenario_1.rds"
+  "df__pep_75.rds"
 ))
 
 glimpse(d_sim)
@@ -35,3 +35,55 @@ plot(
   y = paste0("cc.dx.", c("B", "H", "W")),
   main = "Proportion of Diagnosed (Black)"
 )
+
+# ------------------------------------------------------------------------------
+# Scenario Comparison Summary
+# ------------------------------------------------------------------------------
+
+library(purrr)
+library(tibble)
+
+# Load all scenarios
+baseline <- readRDS(fs::path(
+  scenarios_dir, "merged_tibbles",
+  "df__baseline.rds"
+))
+
+pep_25 <- readRDS(fs::path(
+  scenarios_dir, "merged_tibbles",
+  "df__pep_25.rds"
+))
+
+pep_50 <- readRDS(fs::path(
+  scenarios_dir, "merged_tibbles",
+  "df__pep_50.rds"
+))
+
+pep_75 <- readRDS(fs::path(
+  scenarios_dir, "merged_tibbles",
+  "df__pep_75.rds"
+))
+
+# Function to summarize final timestep
+get_final_summary <- function(df, scenario_name) {
+
+  df %>%
+    filter(time >= max(time) - 12) %>%   # final year
+    summarise(
+      mean_hiv = mean(hiv.inf),
+      sd_hiv = sd(hiv.inf),
+      mean_incid = mean(hiv.incid)
+    ) %>%
+    mutate(scenario = scenario_name)
+}
+
+# Create comparison table
+comparison_table <- bind_rows(
+  get_final_summary(baseline, "Baseline"),
+  get_final_summary(pep_25, "PEP 25%"),
+  get_final_summary(pep_50, "PEP 50%"),
+  get_final_summary(pep_75, "PEP 75%")
+)
+
+# Print results
+print(comparison_table)

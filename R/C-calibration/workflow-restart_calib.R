@@ -113,3 +113,71 @@ wf <- add_workflow_step(
     "mem-per-cpu" = "5G"
   )
 )
+
+# this is the local version i created and ran for this project
+
+## Phase 3: Restart Calibration - LOCAL
+
+# Restart R before running
+
+library(EpiModelHIV)
+library(dplyr)
+
+# Load modified HIV transmission module
+source(
+  "C:/Users/danie/Documents/master's thesis/EpiModelHIV-p/R/mod.hivtrans.R",
+  local = TRUE
+)
+
+my_hivtrans <- hivtrans_msm
+environment(my_hivtrans) <- asNamespace("EpiModelHIV")
+
+source("R/shared_variables.R", local = TRUE)
+source("R/C-calibration/z-context.R", local = TRUE)
+
+# Load parameters, network objects, and restart path
+source("R/netsim_settings.R", local = TRUE)
+
+# IMPORTANT: PEP stays OFF during calibration
+stopifnot(param$pep.coverage == 0)
+
+# Restart-based control
+control <- control_msm(
+  nsteps         = calibration_end,
+  start          = restart_time,
+  initialize.FUN = reinit_msm,
+  verbose        = FALSE
+)
+
+# Force use of your modified HIV transmission module
+control$hivtrans.FUN <- my_hivtrans
+
+# Verify before running
+stopifnot(
+  any(grepl(
+    "pep.coverage",
+    deparse(body(control$hivtrans.FUN))
+  ))
+)
+
+# First test the restart using CURRENT parameter values
+EpiModelHPC::netsim_scenarios(
+  path_to_restart,
+  param,
+  init,
+  control,
+  scenarios_list = NULL,
+  n_rep = 8,
+  n_cores = 8,
+  output_dir = calib_dir
+)
+
+# Merge outputs
+EpiModelHPC::merge_netsim_scenarios_tibble(
+  sim_dir = calib_dir,
+  output_dir = fs::path(calib_dir, "merged_tibbles"),
+  steps_to_keep = Inf
+)
+
+# Assess against calibration targets
+source("R/C-calibration/process_calibs.R")

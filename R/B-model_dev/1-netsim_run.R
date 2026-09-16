@@ -8,6 +8,17 @@
 # Setup ------------------------------------------------------------------------
 library(EpiModelHIV)
 
+# Load your modified transmission module
+source(
+  "C:/Users/danie/Documents/master's thesis/EpiModelHIV-p/R/mod.hivtrans.R",
+  local = TRUE
+)
+
+# Save it under a different name so it can't be replaced
+my_hivtrans <- hivtrans_msm
+
+environment(my_hivtrans) <- asNamespace("EpiModelHIV")
+
 source("R/shared_variables.R", local = TRUE)
 source("R/B-model_dev/z-context.R")
 
@@ -26,7 +37,20 @@ print(init)
 control <- control_msm(
   nsteps = year_steps * 4
 )
+control$hivtrans.FUN <- my_hivtrans # edit added in in previous gpt session
 print(control)
+
+stopifnot(
+  any(grepl("pep.coverage", deparse(body(my_hivtrans))))
+)
+
+stopifnot(
+  identical(control$hivtrans.FUN, my_hivtrans)
+)
+
+stopifnot(
+  any(grepl("pep.coverage", deparse(body(control$hivtrans.FUN))))
+)
 
 # Read in the previously estimated networks and inspect their content
 est <- readRDS(path_to_est)
@@ -55,8 +79,8 @@ tail(df)
 ## Note: this run will not generate a progress tracker in the console
 control <- control_msm(
   nsteps = year_steps * 4,
-  nsims = 2,
-  ncores = 2
+  nsims = 1,
+  ncores = 1
 )
 print(control)
 

@@ -36,6 +36,21 @@ orig <- readRDS(path_to_restart)
 print(orig)
 str(orig, max.level = 1)
 
+any(grepl("pep.coverage", deparse(body(hivtrans_msm))))
+# TRUE
+
+any(grepl("pep.coverage", deparse(body(control$hivtrans.FUN))))
+# TRUE
+
+file.exists(path_to_restart)
+# TRUE
+
+param$pep.coverage
+# 0
+
+param$pep.efficacy
+# 0.8
+
 # Epidemic simulation
 sim <- netsim(orig, param, init, control)
 

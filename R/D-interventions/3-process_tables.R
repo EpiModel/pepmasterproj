@@ -24,7 +24,7 @@ scenarios_info <- EpiModelHPC::get_scenarios_tibble_infos(scenarios_tibble_dir)
 d_ref <- make_d_ref(
   fs::path(
     scenarios_tibble_dir,
-    "df__test_1_treat_1.rds"
+    "df__pep_25.rds"
   )
 )
 
@@ -35,6 +35,38 @@ d_ls <- future.apply::future_lapply(
 
 d_sc_raw <- dplyr::bind_rows(d_ls)
 glimpse(d_sc_raw)
+
+# Create total cumulative HIV infections across race groups
+d_summary <- d_sc_raw |>
+  mutate(
+    cumulative_infections =
+      cml_incid_B +
+      cml_incid_H +
+      cml_incid_W
+  ) |>
+  group_by(scenario_name) |>
+  summarise(
+    mean_cumulative_infections = mean(cumulative_infections),
+    sd_cumulative_infections   = sd(cumulative_infections),
+    .groups = "drop"
+  )
+
+# Get baseline mean
+baseline_cumulative <- d_summary |>
+  filter(scenario_name == "baseline") |>
+  pull(mean_cumulative_infections)
+
+# Calculate infections averted relative to baseline
+d_summary <- d_summary |>
+  mutate(
+    mean_infections_averted =
+      baseline_cumulative - mean_cumulative_infections,
+
+    percent_infections_averted =
+      100 * mean_infections_averted / baseline_cumulative
+  )
+
+print(d_summary)
 
 source("R/D-interventions/labels.R", local = TRUE)
 
